@@ -23,17 +23,25 @@ function renderAll(){
 
         const shuffled = shuffle(games);
 
-        const groupA = shuffled.slice(0, 3);
-        const groupB = shuffled.slice(3, 6);
+        // DEFAULT untuk semua provider
+        let pickCount = 3;
+
+        // KHUSUS PRAGMATIC PLAY
+        if(name === "Pragmatic Play"){
+            pickCount = 8;
+        }
+
+        const groupA = shuffled.slice(0, pickCount);
+        const groupB = shuffled.slice(pickCount, pickCount * 2);
 
         container.innerHTML += `
         <div class="card">
             <h2>${name}</h2>
 
-            <h3>Grup A</h3>
+            <h3>Grup Pagi</h3>
             <ul>${groupA.map(g => `<li>${g}</li>`).join("")}</ul>
 
-            <h3>Grup B</h3>
+            <h3>Grup Malam</h3>
             <ul>${groupB.map(g => `<li>${g}</li>`).join("")}</ul>
         </div>
         `;
