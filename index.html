@@ -7,16 +7,36 @@
 
 <style>
 body{
-    font-family:Arial;
-    background:#111;
-    color:white;
-    padding:20px;
+    font-family: Arial;
+    background: #111;
+    color: white;
+    padding: 20px;
 }
+
+/* CONTAINER GRID BIAR TIDAK KOSONG DI SAMPING */
+#app{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+/* CARD */
 .card{
-    background:#222;
-    padding:15px;
-    margin-bottom:15px;
-    border-radius:10px;
+    background: #222;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+/* LIST BIAR RAPI */
+ul{
+    padding-left: 20px;
+}
+
+/* RESPONSIVE UNTUK HP */
+@media (max-width: 768px){
+    #app{
+        grid-template-columns: 1fr;
+    }
 }
 </style>
 </head>
