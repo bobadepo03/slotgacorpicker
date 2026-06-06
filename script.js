@@ -27,7 +27,7 @@ function renderAll(){
         let pickCount = 3;
 
         // KHUSUS PRAGMATIC PLAY
-        if(name === "Pragmatic Play"){
+        if(name === "PRAGMATIC"){
             pickCount = 8;
         }
 
