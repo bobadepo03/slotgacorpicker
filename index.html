@@ -13,7 +13,20 @@ body{
     padding: 20px;
 }
 
-/* CONTAINER GRID BIAR TIDAK KOSONG DI SAMPING */
+/* Tombol global refresh */
+#refreshGlobal{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #444;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* CONTAINER GRID */
 #app{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -25,14 +38,28 @@ body{
     background: #222;
     padding: 15px;
     border-radius: 10px;
+    position: relative; /* penting untuk tombol di dalam card */
 }
 
-/* LIST BIAR RAPI */
+/* Tombol refresh per-card */
+.card .refreshBtn{
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: #333;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* LIST */
 ul{
     padding-left: 20px;
 }
 
-/* RESPONSIVE UNTUK HP */
+/* RESPONSIVE */
 @media (max-width: 768px){
     #app{
         grid-template-columns: 1fr;
@@ -44,6 +71,7 @@ ul{
 <body>
 
 <h1>🎰 SLOT GACOR PICKER 🎰</h1>
+<button id="refreshGlobal">🔄 Refresh Semua</button>
 
 <div id="app"></div>
 
