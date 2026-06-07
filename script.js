@@ -98,12 +98,15 @@ function updateTimestamp(){
         minute: '2-digit', 
         second: '2-digit'
     };
-    // Format dasar
+
+    // Format dasar: "Mon, 08 June 2026, 02:14:20"
     let formatted = now.toLocaleString('en-GB', options);
 
-    // Hasil default biasanya "Mon, 08 June 2026, 02:14:20"
-    // Kita ubah koma jadi strip
+    // Ubah koma pertama jadi strip
     formatted = formatted.replace(',', ' -');
+
+    // Hapus koma kedua (sebelum jam)
+    formatted = formatted.replace(',', ' at');
 
     // Tambah WIB di belakang
     document.getElementById("timestamp").textContent = formatted + " WIB";
