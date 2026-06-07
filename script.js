@@ -90,7 +90,7 @@ document.getElementById("refreshGlobal").onclick = () => {
 function updateTimestamp(){
     const now = new Date();
     const options = { 
-        weekday: 'long',   // nama hari lengkap
+        weekday: 'short',   // nama hari lengkap
         day: '2-digit', 
         month: 'long',     // nama bulan lengkap
         year: 'numeric',
