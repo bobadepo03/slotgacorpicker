@@ -90,8 +90,13 @@ document.getElementById("refreshGlobal").onclick = () => {
 function updateTimestamp(){
     const now = new Date();
     const options = { 
-        day: '2-digit', month: 'short', year: 'numeric',
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
+        weekday: 'long',   // nama hari lengkap
+        day: '2-digit', 
+        month: 'long',     // nama bulan lengkap
+        year: 'numeric',
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit'
     };
     const formatted = now.toLocaleString('en-GB', options).replace(',', '');
     document.getElementById("timestamp").textContent = formatted;
