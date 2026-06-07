@@ -15,20 +15,14 @@ async function loadData(){
     renderAll();
 }
 
-function getPickCount(name){
-    if(name === "PRAGMATIC") return 8;
-    if(name === "PGSOFT") return 4;
-    return 3; // default
-}
-
 function renderAll(){
     const container = document.getElementById("app");
     container.innerHTML = "";
 
     for(const [name, games] of Object.entries(providers)){
         const shuffled = shuffle(games);
-        const pickCount = getPickCount(name);
 
+        let pickCount = (name === "PRAGMATIC") ? 8 : 3;
         const groupA = shuffled.slice(0, pickCount);
         const groupB = shuffled.slice(pickCount, pickCount * 2);
 
@@ -61,8 +55,8 @@ function renderAll(){
             const name = card.querySelector("h2").textContent;
             const games = providers[name];
             const shuffled = shuffle(games);
-            const pickCount = getPickCount(name);
 
+            let pickCount = (name === "PRAGMATIC") ? 8 : 3;
             const groupA = shuffled.slice(0, pickCount);
             const groupB = shuffled.slice(pickCount, pickCount * 2);
 
@@ -93,27 +87,15 @@ document.getElementById("refreshGlobal").onclick = () => {
 };
 
 // fungsi timestamp
-// fungsi timestamp
 function updateTimestamp(){
     const now = new Date();
     const options = { 
-        day: '2-digit', 
-        month: 'long',      // June, July, dst.
-        year: 'numeric',
-        hour: '2-digit', 
-        minute: '2-digit', 
-        second: '2-digit'
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
     };
-
-    // Format: "08 June 2026 - 05:33:30"
-    let formatted = now.toLocaleString('en-GB', options);
-
-    // Ganti koma sebelum jam jadi strip
-    formatted = formatted.replace(', ', ' - ');
-
+    const formatted = now.toLocaleString('en-GB', options).replace(',', '');
     document.getElementById("timestamp").textContent = formatted;
 }
-
 setInterval(updateTimestamp, 1000);
 updateTimestamp();
 
