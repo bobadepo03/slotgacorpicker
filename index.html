@@ -13,7 +13,7 @@ body{
     padding: 20px;
 }
 
-/* Tombol global refresh */
+/* Tombol global refresh di pojok kiri atas */
 #refreshGlobal{
     position: absolute;
     top: 20px;
@@ -41,7 +41,7 @@ body{
     position: relative; /* penting untuk tombol di dalam card */
 }
 
-/* Tombol refresh per-card */
+/* Tombol refresh per-card di pojok kiri bawah */
 .card .refreshBtn{
     position: absolute;
     bottom: 10px;
@@ -64,6 +64,15 @@ ul{
     #app{
         grid-template-columns: 1fr;
     }
+}
+
+/* Animasi fade-in */
+.fade {
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+.fade.show {
+    opacity: 1;
 }
 </style>
 </head>
