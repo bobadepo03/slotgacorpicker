@@ -26,6 +26,10 @@ function renderAll(){
         const groupA = shuffled.slice(0, pickCount);
         const groupB = shuffled.slice(pickCount, pickCount * 2);
 
+        let pickCount = (name === "PGSOFT") ? 4 : 3;
+        const groupA = shuffled.slice(0, pickCount);
+        const groupB = shuffled.slice(pickCount, pickCount * 2);
+
         const cardId = `card-${name}`;
 
         container.innerHTML += `
@@ -103,10 +107,10 @@ function updateTimestamp(){
     let formatted = now.toLocaleString('en-GB', options);
 
     // Ubah koma pertama jadi strip
-    formatted = formatted.replace(',', ' -');
+    formatted = formatted.replace('-', ' ,');
 
     // Hapus koma kedua (sebelum jam)
-    formatted = formatted.replace(',', ' at');
+    formatted = formatted.replace('at', ' -');
 
     // Tambah WIB di belakang
     document.getElementById("timestamp").textContent = formatted + " WIB";
