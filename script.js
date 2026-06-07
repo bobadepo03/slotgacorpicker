@@ -15,18 +15,20 @@ async function loadData(){
     renderAll();
 }
 
+function getPickCount(name){
+    if(name === "PRAGMATIC") return 8;
+    if(name === "PGSOFT") return 4;
+    return 3; // default
+}
+
 function renderAll(){
     const container = document.getElementById("app");
     container.innerHTML = "";
 
     for(const [name, games] of Object.entries(providers)){
         const shuffled = shuffle(games);
+        const pickCount = getPickCount(name);
 
-        let pickCount = (name === "PRAGMATIC") ? 8 : 3;
-        const groupA = shuffled.slice(0, pickCount);
-        const groupB = shuffled.slice(pickCount, pickCount * 2);
-
-        let pickCount = (name === "PGSOFT") ? 4 : 3;
         const groupA = shuffled.slice(0, pickCount);
         const groupB = shuffled.slice(pickCount, pickCount * 2);
 
@@ -59,8 +61,8 @@ function renderAll(){
             const name = card.querySelector("h2").textContent;
             const games = providers[name];
             const shuffled = shuffle(games);
+            const pickCount = getPickCount(name);
 
-            let pickCount = (name === "PRAGMATIC") ? 8 : 3;
             const groupA = shuffled.slice(0, pickCount);
             const groupB = shuffled.slice(pickCount, pickCount * 2);
 
@@ -107,10 +109,10 @@ function updateTimestamp(){
     let formatted = now.toLocaleString('en-GB', options);
 
     // Ubah koma pertama jadi strip
-    formatted = formatted.replace('-', ' ,');
+    formatted = formatted.replace(',', ',');
 
-    // Hapus koma kedua (sebelum jam)
-    formatted = formatted.replace('at', ' -');
+    // Hapus koma kedua (sebelum jam) → ganti jadi strip
+    formatted = formatted.replace(', ', ' - ');
 
     // Tambah WIB di belakang
     document.getElementById("timestamp").textContent = formatted + " WIB";
