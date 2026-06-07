@@ -29,7 +29,7 @@ function renderAll(){
         const cardId = `card-${name}`;
 
         container.innerHTML += `
-          <div class="card" id="${cardId}">
+          <div class="card fade" id="${cardId}">
             <h2>${name}</h2>
 
             <h3>Grup Pagi</h3>
@@ -43,6 +43,13 @@ function renderAll(){
         `;
     }
 
+    // trigger animasi fade-in untuk semua card
+    requestAnimationFrame(() => {
+        document.querySelectorAll(".card").forEach(card => {
+            card.classList.add("show");
+        });
+    });
+
     // refresh per-card
     document.querySelectorAll(".refreshBtn").forEach(btn => {
         btn.onclick = () => {
@@ -55,8 +62,25 @@ function renderAll(){
             const groupA = shuffled.slice(0, pickCount);
             const groupB = shuffled.slice(pickCount, pickCount * 2);
 
-            card.querySelector(".pagi").innerHTML = groupA.map(g => `<li>${g}</li>`).join("");
-            card.querySelector(".malam").innerHTML = groupB.map(g => `<li>${g}</li>`).join("");
+            const pagiList = card.querySelector(".pagi");
+            const malamList = card.querySelector(".malam");
+
+            // animasi fade
+            pagiList.classList.add("fade");
+            malamList.classList.add("fade");
+
+            pagiList.innerHTML = groupA.map(g => `<li>${g}</li>`).join("");
+            malamList.innerHTML = groupB.map(g => `<li>${g}</li>`).join("");
+
+            requestAnimationFrame(() => {
+                pagiList.classList.add("show");
+                malamList.classList.add("show");
+            });
+
+            setTimeout(() => {
+                pagiList.classList.remove("fade", "show");
+                malamList.classList.remove("fade", "show");
+            }, 600);
         };
     });
 }
