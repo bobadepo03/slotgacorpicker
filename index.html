@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>$L07 G4C0R P*CK3R</title>
+<title>Games Picker Kevin</title>
 
 <style>
 body{
@@ -13,14 +13,23 @@ body{
     padding: 20px;
 }
 
-/* Header container biar judul dan tombol sejajar */
+/* Timestamp di atas judul */
+#timestamp{
+    text-align: center;
+    color: #0f0; /* hijau digital */
+    font-family: monospace;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Header judul + tombol global */
 .header{
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* Tombol global refresh di kanan atas */
+/* Tombol global refresh */
 #refreshGlobal{
     background: #444;
     color: white;
@@ -83,9 +92,12 @@ ul{
 
 <body>
 
+<!-- Timestamp di atas judul -->
+<div id="timestamp"></div>
+
 <div class="header">
-  <h1>🎰 BOBATOTO 🎰</h1>
-  <button id="refreshGlobal">🔄 Refresh All</button>
+  <h1>🎰 SLOT GACOR PICKER 🎰</h1>
+  <button id="refreshGlobal">🔄 Refresh Semua</button>
 </div>
 
 <div id="app"></div>
