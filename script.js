@@ -93,10 +93,10 @@ document.getElementById("refreshGlobal").onclick = () => {
 };
 
 // fungsi timestamp
+// fungsi timestamp
 function updateTimestamp(){
     const now = new Date();
     const options = { 
-        weekday: 'short',   // Mon, Tue, dst.
         day: '2-digit', 
         month: 'long',      // June, July, dst.
         year: 'numeric',
@@ -105,17 +105,13 @@ function updateTimestamp(){
         second: '2-digit'
     };
 
-    // Format dasar: "Mon, 08 June 2026, 02:14:20"
+    // Format: "08 June 2026 - 05:33:30"
     let formatted = now.toLocaleString('en-GB', options);
 
-    // Ubah koma pertama jadi strip
-    formatted = formatted.replace(',', ',');
-
-    // Hapus koma kedua (sebelum jam) → ganti jadi strip
+    // Ganti koma sebelum jam jadi strip
     formatted = formatted.replace(', ', ' - ');
 
-    // Tambah WIB di belakang
-    document.getElementById("timestamp").textContent = formatted + " WIB";
+    document.getElementById("timestamp").textContent = formatted;
 }
 
 setInterval(updateTimestamp, 1000);
