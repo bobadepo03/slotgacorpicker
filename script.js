@@ -90,17 +90,25 @@ document.getElementById("refreshGlobal").onclick = () => {
 function updateTimestamp(){
     const now = new Date();
     const options = { 
-        weekday: 'short',   // nama hari lengkap
+        weekday: 'short',   // Mon, Tue, dst.
         day: '2-digit', 
-        month: 'long',     // nama bulan lengkap
+        month: 'long',      // June, July, dst.
         year: 'numeric',
         hour: '2-digit', 
         minute: '2-digit', 
         second: '2-digit'
     };
-    const formatted = now.toLocaleString('en-GB', options).replace(',', '');
-    document.getElementById("timestamp").textContent = formatted;
+    // Format dasar
+    let formatted = now.toLocaleString('en-GB', options);
+
+    // Hasil default biasanya "Mon, 08 June 2026, 02:14:20"
+    // Kita ubah koma jadi strip
+    formatted = formatted.replace(',', ' -');
+
+    // Tambah WIB di belakang
+    document.getElementById("timestamp").textContent = formatted + " WIB";
 }
+
 setInterval(updateTimestamp, 1000);
 updateTimestamp();
 
