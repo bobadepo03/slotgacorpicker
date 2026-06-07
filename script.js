@@ -20,32 +20,50 @@ function renderAll(){
     container.innerHTML = "";
 
     for(const [name, games] of Object.entries(providers)){
-
         const shuffled = shuffle(games);
 
-        // DEFAULT untuk semua provider
-        let pickCount = 3;
-
-        // KHUSUS PRAGMATIC PLAY
-        if(name === "PRAGMATIC"){
-            pickCount = 8;
-        }
-
+        let pickCount = (name === "PRAGMATIC") ? 8 : 3;
         const groupA = shuffled.slice(0, pickCount);
         const groupB = shuffled.slice(pickCount, pickCount * 2);
 
+        const cardId = `card-${name}`;
+
         container.innerHTML += `
-        <div class="card">
+          <div class="card" id="${cardId}">
             <h2>${name}</h2>
 
             <h3>Grup Pagi</h3>
-            <ul>${groupA.map(g => `<li>${g}</li>`).join("")}</ul>
+            <ul class="pagi">${groupA.map(g => `<li>${g}</li>`).join("")}</ul>
 
             <h3>Grup Malam</h3>
-            <ul>${groupB.map(g => `<li>${g}</li>`).join("")}</ul>
-        </div>
+            <ul class="malam">${groupB.map(g => `<li>${g}</li>`).join("")}</ul>
+
+            <button class="refreshBtn">🔄 Refresh</button>
+          </div>
         `;
     }
+
+    // refresh per-card
+    document.querySelectorAll(".refreshBtn").forEach(btn => {
+        btn.onclick = () => {
+            const card = btn.parentElement;
+            const name = card.querySelector("h2").textContent;
+            const games = providers[name];
+            const shuffled = shuffle(games);
+
+            let pickCount = (name === "PRAGMATIC") ? 8 : 3;
+            const groupA = shuffled.slice(0, pickCount);
+            const groupB = shuffled.slice(pickCount, pickCount * 2);
+
+            card.querySelector(".pagi").innerHTML = groupA.map(g => `<li>${g}</li>`).join("");
+            card.querySelector(".malam").innerHTML = groupB.map(g => `<li>${g}</li>`).join("");
+        };
+    });
 }
+
+// refresh global
+document.getElementById("refreshGlobal").onclick = () => {
+    renderAll();
+};
 
 loadData();
