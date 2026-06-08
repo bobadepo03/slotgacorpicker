@@ -13,6 +13,7 @@ async function loadData(){
     const res = await fetch("providers.json");
     providers = await res.json();
     renderAll();
+    renderScheduleTable(); // panggil jadwal setelah card
 }
 
 function getPickCount(name){
@@ -84,12 +85,51 @@ function renderAll(){
                 pagiList.classList.remove("fade", "show");
                 malamList.classList.remove("fade", "show");
             }, 600);
+
+            // update jadwal bawah juga
+            renderScheduleTable();
         };
     });
 }
 
+function renderScheduleTable(){
+    const container = document.getElementById("schedule");
+    container.innerHTML = `
+      <h2>🔥 SLOT GACOR HARI INI 🔥</h2>
+      <div class="schedule-grid">
+        <div class="col pagi">
+          <h3>🌞 Grup Pagi</h3>
+        </div>
+        <div class="col malam">
+          <h3>🌙 Grup Malam</h3>
+        </div>
+      </div>
+    `;
+
+    const pagiCol = container.querySelector(".pagi");
+    const malamCol = container.querySelector(".malam");
+
+    for(const [name, games] of Object.entries(providers)){
+        const shuffled = shuffle(games);
+        let pickCount = getPickCount(name);
+
+        const groupA = shuffled.slice(0, pickCount);
+        const groupB = shuffled.slice(pickCount, pickCount * 2);
+
+        pagiCol.innerHTML += `
+          <h4>${name}</h4>
+          ${groupA.map(g => `<p>💎 ${g}</p>`).join("")}
+        `;
+        malamCol.innerHTML += `
+          <h4>${name}</h4>
+          ${groupB.map(g => `<p>💎 ${g}</p>`).join("")}
+        `;
+    }
+}
+
 document.getElementById("refreshGlobal").onclick = () => {
     renderAll();
+    renderScheduleTable();
 };
 
 // fungsi timestamp
