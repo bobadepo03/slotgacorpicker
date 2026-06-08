@@ -25,7 +25,7 @@ function getPickCount(name){
 function renderAll(){
     const container = document.getElementById("app");
     container.innerHTML = "";
-    latestGroups = {}; // reset setiap refresh
+    latestGroups = {}; // reset setiap global refresh
 
     for(const [name, games] of Object.entries(providers)){
         const shuffled = shuffle(games);
@@ -34,7 +34,7 @@ function renderAll(){
         const groupA = shuffled.slice(0, pickCount);     // pagi
         const groupB = shuffled.slice(pickCount, pickCount * 2); // malam
 
-        // simpan hasil ke latestGroups
+        // simpan hasil ke global
         latestGroups[name] = { pagi: groupA, malam: groupB };
 
         const cardId = `card-${name}`;
@@ -60,6 +60,7 @@ function renderAll(){
         });
     });
 
+    // refresh per-card
     document.querySelectorAll(".refreshBtn").forEach(btn => {
         btn.onclick = () => {
             const card = btn.parentElement;
