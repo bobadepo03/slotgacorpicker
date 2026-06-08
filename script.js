@@ -22,7 +22,7 @@ function renderAll(){
     for(const [name, games] of Object.entries(providers)){
         const shuffled = shuffle(games);
 
-        let pickCount = (name === "PRAGMATIC") ? 8 : 3;
+        let pickCount = (name === "★PRAGMATIC★") ? 8 : 3;
         const groupA = shuffled.slice(0, pickCount);
         const groupB = shuffled.slice(pickCount, pickCount * 2);
 
@@ -56,7 +56,7 @@ function renderAll(){
             const games = providers[name];
             const shuffled = shuffle(games);
 
-            let pickCount = (name === "PRAGMATIC") ? 8 : 3;
+            let pickCount = (name === "★PRAGMATIC★") ? 8 : 3;
             const groupA = shuffled.slice(0, pickCount);
             const groupB = shuffled.slice(pickCount, pickCount * 2);
 
