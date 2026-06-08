@@ -1,132 +1,33 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>$L07 G4C0R</title>
-
-<style>
-body{
-    font-family: Arial;
-    background: #111;
-    color: white;
-    padding: 20px;
-}
-
-/* Timestamp di atas judul */
-#timestamp{
-    text-align: left;
-    color: #0f0; /* hijau digital */
-    font-family: monospace;
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-/* Header judul + tombol global */
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* Tombol global refresh */
-#refreshGlobal{
-    background: linear-gradient(90deg, #00c6ff, #0072ff); /* biru gradient */
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 0 10px rgba(0, 114, 255, 0.6);
-}
-
-    
-footer{
-    text-align: center;
-    margin-top: 30px;
-    padding: 10px;
-    color: #888;
-    font-size: 12px;
-}
-
-/* CONTAINER GRID */
-#app{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-}
-
-/* CARD */
-.card{
-    background: #222;
-    padding: 15px;
-    border-radius: 10px;
-    position: relative;
-}
-
-/* Tombol refresh per-card di kanan bawah */
-.card .refreshBtn{
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: #00ff00;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease; /* smooth animasi */
-    text-shadow: 0 0 5px #000; /* stroke hitam tipis */
-}
-
-/* Hover effect */
-.card .refreshBtn:hover{
-    background: #00cc00;              /* hijau sedikit lebih gelap */
-    box-shadow: 0 0 15px #00ff00;     /* glow neon */
-    transform: scale(1.05);           /* sedikit membesar */
-}
-    
-/* LIST */
-ul{
-    padding-left: 20px;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px){
-    #app{
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Animasi fade-in */
-.fade {
-    opacity: 0;
-    transition: opacity 0.5s ease-in;
-}
-.fade.show {
-    opacity: 1;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>🎰 BOBA_Picker 🎰</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-<!-- Timestamp di atas judul -->
-<div id="timestamp"></div>
-
-<div class="header">
   <h1>🎰 BOBA_Picker 🎰</h1>
-  <button id="refreshGlobal">Refresh All</button>
-</div>
+  <button onclick="renderAll()">🔄 Refresh All</button>
+  <p id="timestamp"></p>
 
-<div id="app"></div>
+  <!-- Card output utama -->
+  <div id="output"></div>
 
-<footer>
-  © 2026 Slot Gacor Picker - Powered by Kevin - Coding boleh ngaco, spin tetap gacor
-</footer>    
-    
-<script src="script.js"></script>
+  <!-- Catatan tambahan -->
+  <div id="extraNote" class="note-block">
+    <h3>📒 Catatan Tambahan</h3>
+    <div style="display:flex; gap:40px;">
+      <div>
+        <h4>Grup Pagi</h4>
+        <div id="notePagi"></div>
+      </div>
+      <div>
+        <h4>Grup Malam</h4>
+        <div id="noteMalam"></div>
+      </div>
+    </div>
+  </div>
 
+  <script src="script.js"></script>
 </body>
 </html>
