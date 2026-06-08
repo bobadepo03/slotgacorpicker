@@ -13,7 +13,7 @@ async function loadData(){
     const res = await fetch("providers.json");
     providers = await res.json();
     renderAll();
-    renderScheduleTable(); // panggil jadwal setelah card
+    renderScheduleTable();
 }
 
 function getPickCount(name){
@@ -28,15 +28,12 @@ function renderAll(){
 
     for(const [name, games] of Object.entries(providers)){
         const shuffled = shuffle(games);
-
         let pickCount = getPickCount(name);
         const groupA = shuffled.slice(0, pickCount);
         const groupB = shuffled.slice(pickCount, pickCount * 2);
 
-        const cardId = `card-${name}`;
-
         container.innerHTML += `
-          <div class="card fade" id="${cardId}">
+          <div class="card fade">
             <h2>${name}</h2>
             <h3>Grup Pagi</h3>
             <ul class="pagi">${groupA.map(g => `<li>${g}</li>`).join("")}</ul>
@@ -62,11 +59,8 @@ function renderAll(){
             const groupA = shuffled.slice(0, pickCount);
             const groupB = shuffled.slice(pickCount, pickCount * 2);
 
-            const pagiList = card.querySelector(".pagi");
-            const malamList = card.querySelector(".malam");
-
-            pagiList.innerHTML = groupA.map(g => `<li>${g}</li>`).join("");
-            malamList.innerHTML = groupB.map(g => `<li>${g}</li>`).join("");
+            card.querySelector(".pagi").innerHTML = groupA.map(g => `<li>${g}</li>`).join("");
+            card.querySelector(".malam").innerHTML = groupB.map(g => `<li>${g}</li>`).join("");
 
             renderScheduleTable();
         };
@@ -76,7 +70,7 @@ function renderAll(){
 // =======================
 // TEMPLATE JAM PERMANEN
 // =======================
-// (jamTemplatePagi & jamTemplateMalam sudah kamu isi sesuai contoh panjang)
+// (isi jamTemplatePagi & jamTemplateMalam sesuai daftar jam yang sudah saya kasih)
 
 function renderScheduleBlock(title, jamTemplate){
   let html = `
