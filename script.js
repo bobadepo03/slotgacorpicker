@@ -15,6 +15,12 @@ async function loadData(){
     renderAll();
 }
 
+function getPickCount(name){
+    if(name === "★PRAGMATIC★") return 8;
+    if(name === "★PGSOFT★") return 4;
+    return 3;
+}
+
 function renderAll(){
     const container = document.getElementById("app");
     container.innerHTML = "";
@@ -22,7 +28,7 @@ function renderAll(){
     for(const [name, games] of Object.entries(providers)){
         const shuffled = shuffle(games);
 
-        let pickCount = (name === "★PRAGMATIC★") ? 8 : 3;
+        let pickCount = getPickCount(name);
         const groupA = shuffled.slice(0, pickCount);
         const groupB = shuffled.slice(pickCount, pickCount * 2);
 
@@ -56,7 +62,7 @@ function renderAll(){
             const games = providers[name];
             const shuffled = shuffle(games);
 
-            let pickCount = (name === "★PRAGMATIC★") ? 8 : 3;
+            let pickCount = getPickCount(name);
             const groupA = shuffled.slice(0, pickCount);
             const groupB = shuffled.slice(pickCount, pickCount * 2);
 
