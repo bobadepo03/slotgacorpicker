@@ -1,113 +1,143 @@
-// Data provider + game
-const providers = {
-  "★PRAGMATIC★": [
-    "Aztec Gems Deluxe",
-    "Mahjong Wins 3",
-    "Sweet Bonanza Xmas",
-    "Mahjong Wins - Gong Xi Fa Cai",
-    "Aztec Gems Megaways",
-    "Zombie School Megaways",
-    "Steamin' Reels",
-    "Starlight Princess"
-  ],
-  "★PGSOFT★": [
-    "Funky Fortunes",
-    "The Great Icescape",
-    "Gemstones Gold",
-    "Speed Winner"
-  ],
-  "★PLAYSTAR★": [
-    "Pyramid Of Flames",
-    "WHO'S THE BOSS",
-    "SUPER GEMS 2"
-  ],
-  "★FASTSPIN★": [
-    "Triple Happiness",
-    "Wild Wet Win",
-    "Fruits Mania"
-  ],
-  "★5G GAMES★": [
-    "G KONG",
-    "Sugar High 5",
-    "GOD OF FORTUNE 2"
-  ]
+let providers = {};
+let latestGroups = {}; // simpan hasil pagi/malam
+
+function shuffle(arr){
+    let copy = [...arr];
+    for(let i = copy.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+}
+
+async function loadData(){
+    const res = await fetch("providers.json");
+    providers = await res.json();
+    renderAll();
+}
+
+function getPickCount(name){
+    if(name === "★PRAGMATIC★") return 8;
+    if(name === "★PGSOFT★") return 4;
+    return 3;
+}
+
+function renderAll(){
+    const container = document.getElementById("app");
+    container.innerHTML = "";
+    latestGroups = {}; // reset setiap refresh
+
+    for(const [name, games] of Object.entries(providers)){
+        const shuffled = shuffle(games);
+
+        let pickCount = getPickCount(name);
+        const groupA = shuffled.slice(0, pickCount);     // pagi
+        const groupB = shuffled.slice(pickCount, pickCount * 2); // malam
+
+        // simpan hasil ke latestGroups
+        latestGroups[name] = { pagi: groupA, malam: groupB };
+
+        const cardId = `card-${name}`;
+
+        container.innerHTML += `
+          <div class="card fade" id="${cardId}">
+            <h2>${name}</h2>
+
+            <h3>Grup Pagi</h3>
+            <ul class="pagi">${groupA.map(g => `<li>${g}</li>`).join("")}</ul>
+
+            <h3>Grup Malam</h3>
+            <ul class="malam">${groupB.map(g => `<li>${g}</li>`).join("")}</ul>
+
+            <button class="refreshBtn">🔄 Refresh</button>
+          </div>
+        `;
+    }
+
+    requestAnimationFrame(() => {
+        document.querySelectorAll(".card").forEach(card => {
+            card.classList.add("show");
+        });
+    });
+
+    document.querySelectorAll(".refreshBtn").forEach(btn => {
+        btn.onclick = () => {
+            const card = btn.parentElement;
+            const name = card.querySelector("h2").textContent;
+            const games = providers[name];
+            const shuffled = shuffle(games);
+
+            let pickCount = getPickCount(name);
+            const groupA = shuffled.slice(0, pickCount);
+            const groupB = shuffled.slice(pickCount, pickCount * 2);
+
+            // update latestGroups untuk provider ini
+            latestGroups[name] = { pagi: groupA, malam: groupB };
+
+            const pagiList = card.querySelector(".pagi");
+            const malamList = card.querySelector(".malam");
+
+            pagiList.classList.add("fade");
+            malamList.classList.add("fade");
+
+            pagiList.innerHTML = groupA.map(g => `<li>${g}</li>`).join("");
+            malamList.innerHTML = groupB.map(g => `<li>${g}</li>`).join("");
+
+            requestAnimationFrame(() => {
+                pagiList.classList.add("show");
+                malamList.classList.add("show");
+            });
+
+            setTimeout(() => {
+                pagiList.classList.remove("fade", "show");
+                malamList.classList.remove("fade", "show");
+            }, 600);
+
+            // render ulang notes biar sinkron
+            renderNotes();
+        };
+    });
+
+    // render notes setelah global refresh
+    renderNotes();
+}
+
+document.getElementById("refreshGlobal").onclick = () => {
+    renderAll();
 };
 
-// Fungsi shuffle
-function shuffle(array) {
-  return array
-    .map(value => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value);
+// fungsi timestamp
+function updateTimestamp(){
+    const now = new Date();
+    const options = { 
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+    };
+    const formatted = now.toLocaleString('en-GB', options).replace(',', '');
+    document.getElementById("timestamp").textContent = formatted;
+}
+setInterval(updateTimestamp, 1000);
+updateTimestamp();
+
+function renderNotes(){
+    const notePagi = document.getElementById("notePagi");
+    const noteMalam = document.getElementById("noteMalam");
+    notePagi.innerHTML = "";
+    noteMalam.innerHTML = "";
+
+    for(const [name, groups] of Object.entries(latestGroups)){
+        const pagiDiv = document.createElement("div");
+        pagiDiv.className = "provider";
+        pagiDiv.innerHTML = `<strong>${name}</strong><br>` +
+            groups.pagi.map(g => `${g}<br>`).join("");
+        notePagi.appendChild(pagiDiv);
+
+        const malamDiv = document.createElement("div");
+        malamDiv.className = "provider";
+        malamDiv.innerHTML = `<strong>${name}</strong><br>` +
+            groups.malam.map(g => `${g}<br>`).join("");
+        noteMalam.appendChild(malamDiv);
+    }
 }
 
-// Render card utama
-function renderAll() {
-  const output = document.getElementById("output");
-  output.innerHTML = "";
-
-  for (const [name, games] of Object.entries(providers)) {
-    const shuffled = shuffle(games);
-
-    let pickCount = (name === "★PRAGMATIC★") ? 8 : 
-                    (name === "★PGSOFT★") ? 4 : 3;
-
-    const groupA = shuffled.slice(0, pickCount);     // pagi
-    const groupB = shuffled.slice(pickCount, pickCount * 2); // malam
-
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <h2>${name}</h2>
-      <div class="section">
-        <h3>Pagi</h3>
-        ${groupA.map(g => `<div>${g}</div>`).join("")}
-      </div>
-      <div class="section">
-        <h3>Malam</h3>
-        ${groupB.map(g => `<div>${g}</div>`).join("")}
-      </div>
-    `;
-    output.appendChild(card);
-  }
-
-  // Update timestamp
-  document.getElementById("timestamp").textContent =
-    "Last refresh: " + new Date().toLocaleString();
-
-  // Render notes sinkron
-  renderNotes();
-}
-
-// Render note tambahan
-function renderNotes() {
-  const notePagi = document.getElementById("notePagi");
-  const noteMalam = document.getElementById("noteMalam");
-  notePagi.innerHTML = "";
-  noteMalam.innerHTML = "";
-
-  for (const [name, games] of Object.entries(providers)) {
-    const shuffled = shuffle(games);
-
-    let pickCount = (name === "★PRAGMATIC★") ? 8 : 
-                    (name === "★PGSOFT★") ? 4 : 3;
-
-    const groupA = shuffled.slice(0, pickCount);     // pagi
-    const groupB = shuffled.slice(pickCount, pickCount * 2); // malam
-
-    const pagiDiv = document.createElement("div");
-    pagiDiv.className = "provider";
-    pagiDiv.innerHTML = `<strong>${name}</strong><br>` +
-      groupA.map(g => `${g}<br>`).join("");
-    notePagi.appendChild(pagiDiv);
-
-    const malamDiv = document.createElement("div");
-    malamDiv.className = "provider";
-    malamDiv.innerHTML = `<strong>${name}</strong><br>` +
-      groupB.map(g => `${g}<br>`).join("");
-    noteMalam.appendChild(malamDiv);
-  }
-}
-
-// Panggil render pertama kali
-renderAll();
+loadData();
