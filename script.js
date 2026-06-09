@@ -44,10 +44,10 @@ function renderAll(){
             <h2>${name}</h2>
 
             <h3>Grup Pagi</h3>
-            <ul class="pagi">${groupA.map(g => `<li>🎰 ${g}</li>`).join("")}</ul>
+            <ul class="pagi">${groupA.map(g => `<li>${g}</li>`).join("")}</ul>
 
             <h3>Grup Malam</h3>
-            <ul class="malam">${groupB.map(g => `<li>🎰 ${g}</li>`).join("")}</ul>
+            <ul class="malam">${groupB.map(g => `<li>${g}</li>`).join("")}</ul>
 
             <button class="refreshBtn">🔄 Refresh</button>
           </div>
@@ -81,8 +81,8 @@ function renderAll(){
             pagiList.classList.add("fade");
             malamList.classList.add("fade");
 
-            pagiList.innerHTML = groupA.map(g => `<li>🎰 ${g}</li>`).join("");
-            malamList.innerHTML = groupB.map(g => `<li>🎰 ${g}</li>`).join("");
+            pagiList.innerHTML = groupA.map(g => `<li>${g}</li>`).join("");
+            malamList.innerHTML = groupB.map(g => `<li>${g}</li>`).join("");
 
             requestAnimationFrame(() => {
                 pagiList.classList.add("show");
@@ -120,7 +120,6 @@ function updateTimestamp(){
 setInterval(updateTimestamp, 1000);
 updateTimestamp();
 
-// catatan tambahan dipisah
 function renderNotes(){
     const notePagi = document.getElementById("notePagi");
     const noteMalam = document.getElementById("noteMalam");
@@ -128,18 +127,16 @@ function renderNotes(){
     noteMalam.innerHTML = "";
 
     for(const [name, groups] of Object.entries(latestGroups)){
-        // blok pagi
         const pagiDiv = document.createElement("div");
         pagiDiv.className = "provider";
         pagiDiv.innerHTML = `<strong>${name}</strong><br>` +
-            groups.pagi.map(g => `🎰 ${g}<br>`).join("");
+            groups.pagi.map(g => `${g}<br>`).join("");
         notePagi.appendChild(pagiDiv);
 
-        // blok malam
         const malamDiv = document.createElement("div");
         malamDiv.className = "provider";
         malamDiv.innerHTML = `<strong>${name}</strong><br>` +
-            groups.malam.map(g => `🎰 ${g}<br>`).join("");
+            groups.malam.map(g => `${g}<br>`).join("");
         noteMalam.appendChild(malamDiv);
     }
 }
