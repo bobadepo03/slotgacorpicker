@@ -25,30 +25,34 @@ function getPickCount(name){
 function renderAll(){
     const container = document.getElementById("app");
     container.innerHTML = "";
-    latestGroups = {}; // reset setiap global refresh
+    latestGroups = {};
 
     for(const [name, games] of Object.entries(providers)){
         const shuffled = shuffle(games);
-
         let pickCount = getPickCount(name);
+
         const groupA = shuffled.slice(0, pickCount);     // pagi
         const groupB = shuffled.slice(pickCount, pickCount * 2); // malam
 
-        // simpan hasil ke global
+        // simpan hasil
         latestGroups[name] = { pagi: groupA, malam: groupB };
 
-        const cardId = `card-${name}`;
-
+        // Card pagi
         container.innerHTML += `
-          <div class="card fade" id="${cardId}">
-            <h2>${name}</h2>
-
+          <div class="card fade pagi-card">
+            <h2>${name} ☀️</h2>
             <h3>Grup Pagi</h3>
-            <ul class="pagi">${groupA.map(g => `<li>${g}</li>`).join("")}</ul>
+            <ul class="pagi">${groupA.map(g => `<li>🎰 ${g}</li>`).join("")}</ul>
+            <button class="refreshBtn">🔄 Refresh</button>
+          </div>
+        `;
 
+        // Card malam
+        container.innerHTML += `
+          <div class="card fade malam-card">
+            <h2>${name} 🌙</h2>
             <h3>Grup Malam</h3>
-            <ul class="malam">${groupB.map(g => `<li>${g}</li>`).join("")}</ul>
-
+            <ul class="malam">${groupB.map(g => `<li>🎰 ${g}</li>`).join("")}</ul>
             <button class="refreshBtn">🔄 Refresh</button>
           </div>
         `;
@@ -64,42 +68,28 @@ function renderAll(){
     document.querySelectorAll(".refreshBtn").forEach(btn => {
         btn.onclick = () => {
             const card = btn.parentElement;
-            const name = card.querySelector("h2").textContent;
+            const title = card.querySelector("h2").textContent;
+            const name = title.replace(" ☀️","").replace(" 🌙","");
             const games = providers[name];
             const shuffled = shuffle(games);
-
             let pickCount = getPickCount(name);
+
             const groupA = shuffled.slice(0, pickCount);
             const groupB = shuffled.slice(pickCount, pickCount * 2);
 
-            // update latestGroups untuk provider ini
             latestGroups[name] = { pagi: groupA, malam: groupB };
 
-            const pagiList = card.querySelector(".pagi");
-            const malamList = card.querySelector(".malam");
+            if(card.classList.contains("pagi-card")){
+                card.querySelector(".pagi").innerHTML = groupA.map(g => `<li>🎰 ${g}</li>`).join("");
+            }
+            if(card.classList.contains("malam-card")){
+                card.querySelector(".malam").innerHTML = groupB.map(g => `<li>🎰 ${g}</li>`).join("");
+            }
 
-            pagiList.classList.add("fade");
-            malamList.classList.add("fade");
-
-            pagiList.innerHTML = groupA.map(g => `<li>${g}</li>`).join("");
-            malamList.innerHTML = groupB.map(g => `<li>${g}</li>`).join("");
-
-            requestAnimationFrame(() => {
-                pagiList.classList.add("show");
-                malamList.classList.add("show");
-            });
-
-            setTimeout(() => {
-                pagiList.classList.remove("fade", "show");
-                malamList.classList.remove("fade", "show");
-            }, 600);
-
-            // render ulang notes biar sinkron
             renderNotes();
         };
     });
 
-    // render notes setelah global refresh
     renderNotes();
 }
 
