@@ -1,0 +1,118 @@
+body{
+    font-family: Arial;
+    background: #111;
+    color: white;
+    padding: 20px;
+}
+
+#timestamp{
+    text-align: left;
+    color: #0f0;
+    font-family: monospace;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#refreshGlobal{
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0, 114, 255, 0.6);
+}
+
+footer{
+    text-align: center;
+    margin-top: 30px;
+    padding: 10px;
+    color: #888;
+    font-size: 12px;
+}
+
+#app{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.card{
+    background: #222;
+    padding: 15px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.card .refreshBtn{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: #00ff00;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px #000;
+}
+.card .refreshBtn:hover{
+    background: #00cc00;
+    box-shadow: 0 0 15px #00ff00;
+    transform: scale(1.05);
+}
+
+/* NOTE BLOCK */
+.note-block {
+    margin-top: 30px;
+    padding: 15px;
+    background: #333;
+    border: 2px dashed #888;
+    border-radius: 8px;
+}
+.note-block h3 {
+    margin-bottom: 10px;
+    color: #0ff;
+}
+.note-container {
+    display: flex;
+    gap: 20px;
+}
+.note-card {
+    flex: 1;
+    background: #222;
+    padding: 15px;
+    border-radius: 8px;
+}
+.pagi-card h4 { color: #ff0; }
+.malam-card h4 { color: #0ff; }
+.provider {
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px){
+    #app{
+        grid-template-columns: 1fr;
+    }
+    .note-container {
+        flex-direction: column;
+    }
+}
+
+.fade {
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+.fade.show {
+    opacity: 1;
+}
