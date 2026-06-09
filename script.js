@@ -119,7 +119,7 @@ function copyNoteContent(noteId){
     const container = document.getElementById(noteId);
     let text = "";
     container.querySelectorAll(".provider").forEach(div => {
-        text += div.innerText + "\n\n";
+        text += div.innerText + "\n";
     });
     navigator.clipboard.writeText(text.trim()).then(() => {
         alert("Isi " + (noteId === "notePagi" ? "Grup Pagi" : "Grup Malam") + " berhasil dicopy!");
