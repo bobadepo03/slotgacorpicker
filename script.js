@@ -40,9 +40,9 @@ function renderAll(){
           <div class="card fade">
             <h2>${name}</h2>
             <h3>Grup Pagi</h3>
-            <ul class="pagi">${groupA.map(g => `<li>🎰 ${g}</li>`).join("")}</ul>
+            <ul class="pagi">${groupA.map(g => `<li>${g}</li>`).join("")}</ul>
             <h3>Grup Malam</h3>
-            <ul class="malam">${groupB.map(g => `<li>🎰 ${g}</li>`).join("")}</ul>
+            <ul class="malam">${groupB.map(g => `<li>${g}</li>`).join("")}</ul>
             <button class="refreshBtn">🔄 Refresh</button>
           </div>
         `;
@@ -67,8 +67,8 @@ function renderAll(){
 
             latestGroups[name] = { pagi: groupA, malam: groupB };
 
-            card.querySelector(".pagi").innerHTML = groupA.map(g => `<li>🎰 ${g}</li>`).join("");
-            card.querySelector(".malam").innerHTML = groupB.map(g => `<li>🎰 ${g}</li>`).join("");
+            card.querySelector(".pagi").innerHTML = groupA.map(g => `<li>${g}</li>`).join("");
+            card.querySelector(".malam").innerHTML = groupB.map(g => `<li>${g}</li>`).join("");
 
             renderNotes();
         };
@@ -103,13 +103,13 @@ function renderNotes(){
         const pagiDiv = document.createElement("div");
         pagiDiv.className = "provider";
         pagiDiv.innerHTML = `<strong>${name}</strong><br>` +
-            groups.pagi.map(g => `🎰 ${g}<br>`).join("");
+            groups.pagi.map(g => `${g}<br>`).join("");
         notePagi.appendChild(pagiDiv);
 
         const malamDiv = document.createElement("div");
         malamDiv.className = "provider";
         malamDiv.innerHTML = `<strong>${name}</strong><br>` +
-            groups.malam.map(g => `🎰 ${g}<br>`).join("");
+            groups.malam.map(g => `${g}<br>`).join("");
         noteMalam.appendChild(malamDiv);
     }
 }
