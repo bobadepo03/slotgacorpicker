@@ -114,4 +114,20 @@ function renderNotes(){
     }
 }
 
+// fungsi copy isi note
+function copyNoteContent(noteId){
+    const container = document.getElementById(noteId);
+    let text = "";
+    container.querySelectorAll(".provider").forEach(div => {
+        text += div.innerText + "\n\n";
+    });
+    navigator.clipboard.writeText(text.trim()).then(() => {
+        alert("Isi " + (noteId === "notePagi" ? "Grup Pagi" : "Grup Malam") + " berhasil dicopy!");
+    });
+}
+
+// binding tombol copy
+document.getElementById("copyPagi").onclick = () => copyNoteContent("notePagi");
+document.getElementById("copyMalam").onclick = () => copyNoteContent("noteMalam");
+
 loadData();
