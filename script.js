@@ -25,34 +25,30 @@ function getPickCount(name){
 function renderAll(){
     const container = document.getElementById("app");
     container.innerHTML = "";
-    latestGroups = {};
+    latestGroups = {}; // reset setiap global refresh
 
     for(const [name, games] of Object.entries(providers)){
         const shuffled = shuffle(games);
-        let pickCount = getPickCount(name);
 
+        let pickCount = getPickCount(name);
         const groupA = shuffled.slice(0, pickCount);     // pagi
         const groupB = shuffled.slice(pickCount, pickCount * 2); // malam
 
-        // simpan hasil
+        // simpan hasil ke global
         latestGroups[name] = { pagi: groupA, malam: groupB };
 
-        // Card pagi
+        const cardId = `card-${name}`;
+
         container.innerHTML += `
-          <div class="card fade pagi-card">
-            <h2>${name} ☀️</h2>
+          <div class="card fade" id="${cardId}">
+            <h2>${name}</h2>
+
             <h3>Grup Pagi</h3>
             <ul class="pagi">${groupA.map(g => `<li>🎰 ${g}</li>`).join("")}</ul>
-            <button class="refreshBtn">🔄 Refresh</button>
-          </div>
-        `;
 
-        // Card malam
-        container.innerHTML += `
-          <div class="card fade malam-card">
-            <h2>${name} 🌙</h2>
             <h3>Grup Malam</h3>
             <ul class="malam">${groupB.map(g => `<li>🎰 ${g}</li>`).join("")}</ul>
+
             <button class="refreshBtn">🔄 Refresh</button>
           </div>
         `;
@@ -68,28 +64,42 @@ function renderAll(){
     document.querySelectorAll(".refreshBtn").forEach(btn => {
         btn.onclick = () => {
             const card = btn.parentElement;
-            const title = card.querySelector("h2").textContent;
-            const name = title.replace(" ☀️","").replace(" 🌙","");
+            const name = card.querySelector("h2").textContent;
             const games = providers[name];
             const shuffled = shuffle(games);
-            let pickCount = getPickCount(name);
 
+            let pickCount = getPickCount(name);
             const groupA = shuffled.slice(0, pickCount);
             const groupB = shuffled.slice(pickCount, pickCount * 2);
 
+            // update latestGroups untuk provider ini
             latestGroups[name] = { pagi: groupA, malam: groupB };
 
-            if(card.classList.contains("pagi-card")){
-                card.querySelector(".pagi").innerHTML = groupA.map(g => `<li>🎰 ${g}</li>`).join("");
-            }
-            if(card.classList.contains("malam-card")){
-                card.querySelector(".malam").innerHTML = groupB.map(g => `<li>🎰 ${g}</li>`).join("");
-            }
+            const pagiList = card.querySelector(".pagi");
+            const malamList = card.querySelector(".malam");
 
+            pagiList.classList.add("fade");
+            malamList.classList.add("fade");
+
+            pagiList.innerHTML = groupA.map(g => `<li>🎰 ${g}</li>`).join("");
+            malamList.innerHTML = groupB.map(g => `<li>🎰 ${g}</li>`).join("");
+
+            requestAnimationFrame(() => {
+                pagiList.classList.add("show");
+                malamList.classList.add("show");
+            });
+
+            setTimeout(() => {
+                pagiList.classList.remove("fade", "show");
+                malamList.classList.remove("fade", "show");
+            }, 600);
+
+            // render ulang notes biar sinkron
             renderNotes();
         };
     });
 
+    // render notes setelah global refresh
     renderNotes();
 }
 
@@ -110,6 +120,7 @@ function updateTimestamp(){
 setInterval(updateTimestamp, 1000);
 updateTimestamp();
 
+// catatan tambahan dipisah
 function renderNotes(){
     const notePagi = document.getElementById("notePagi");
     const noteMalam = document.getElementById("noteMalam");
@@ -117,16 +128,18 @@ function renderNotes(){
     noteMalam.innerHTML = "";
 
     for(const [name, groups] of Object.entries(latestGroups)){
+        // blok pagi
         const pagiDiv = document.createElement("div");
         pagiDiv.className = "provider";
         pagiDiv.innerHTML = `<strong>${name}</strong><br>` +
-            groups.pagi.map(g => `${g}<br>`).join("");
+            groups.pagi.map(g => `🎰 ${g}<br>`).join("");
         notePagi.appendChild(pagiDiv);
 
+        // blok malam
         const malamDiv = document.createElement("div");
         malamDiv.className = "provider";
         malamDiv.innerHTML = `<strong>${name}</strong><br>` +
-            groups.malam.map(g => `${g}<br>`).join("");
+            groups.malam.map(g => `🎰 ${g}<br>`).join("");
         noteMalam.appendChild(malamDiv);
     }
 }
