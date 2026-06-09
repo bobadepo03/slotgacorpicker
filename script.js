@@ -1,5 +1,5 @@
 let providers = {};
-let latestGroups = {}; // simpan hasil pagi/malam
+let latestGroups = {};
 
 function shuffle(arr){
     let copy = [...arr];
@@ -25,30 +25,24 @@ function getPickCount(name){
 function renderAll(){
     const container = document.getElementById("app");
     container.innerHTML = "";
-    latestGroups = {}; // reset setiap global refresh
+    latestGroups = {};
 
     for(const [name, games] of Object.entries(providers)){
         const shuffled = shuffle(games);
-
         let pickCount = getPickCount(name);
-        const groupA = shuffled.slice(0, pickCount);     // pagi
-        const groupB = shuffled.slice(pickCount, pickCount * 2); // malam
 
-        // simpan hasil ke global
+        const groupA = shuffled.slice(0, pickCount);
+        const groupB = shuffled.slice(pickCount, pickCount * 2);
+
         latestGroups[name] = { pagi: groupA, malam: groupB };
 
-        const cardId = `card-${name}`;
-
         container.innerHTML += `
-          <div class="card fade" id="${cardId}">
+          <div class="card fade">
             <h2>${name}</h2>
-
             <h3>Grup Pagi</h3>
-            <ul class="pagi">${groupA.map(g => `<li>${g}</li>`).join("")}</ul>
-
+            <ul class="pagi">${groupA.map(g => `<li>🎰 ${g}</li>`).join("")}</ul>
             <h3>Grup Malam</h3>
-            <ul class="malam">${groupB.map(g => `<li>${g}</li>`).join("")}</ul>
-
+            <ul class="malam">${groupB.map(g => `<li>🎰 ${g}</li>`).join("")}</ul>
             <button class="refreshBtn">🔄 Refresh</button>
           </div>
         `;
@@ -60,7 +54,6 @@ function renderAll(){
         });
     });
 
-    // refresh per-card
     document.querySelectorAll(".refreshBtn").forEach(btn => {
         btn.onclick = () => {
             const card = btn.parentElement;
@@ -72,34 +65,15 @@ function renderAll(){
             const groupA = shuffled.slice(0, pickCount);
             const groupB = shuffled.slice(pickCount, pickCount * 2);
 
-            // update latestGroups untuk provider ini
             latestGroups[name] = { pagi: groupA, malam: groupB };
 
-            const pagiList = card.querySelector(".pagi");
-            const malamList = card.querySelector(".malam");
+            card.querySelector(".pagi").innerHTML = groupA.map(g => `<li>🎰 ${g}</li>`).join("");
+            card.querySelector(".malam").innerHTML = groupB.map(g => `<li>🎰 ${g}</li>`).join("");
 
-            pagiList.classList.add("fade");
-            malamList.classList.add("fade");
-
-            pagiList.innerHTML = groupA.map(g => `<li>${g}</li>`).join("");
-            malamList.innerHTML = groupB.map(g => `<li>${g}</li>`).join("");
-
-            requestAnimationFrame(() => {
-                pagiList.classList.add("show");
-                malamList.classList.add("show");
-            });
-
-            setTimeout(() => {
-                pagiList.classList.remove("fade", "show");
-                malamList.classList.remove("fade", "show");
-            }, 600);
-
-            // render ulang notes biar sinkron
             renderNotes();
         };
     });
 
-    // render notes setelah global refresh
     renderNotes();
 }
 
@@ -107,7 +81,6 @@ document.getElementById("refreshGlobal").onclick = () => {
     renderAll();
 };
 
-// fungsi timestamp
 function updateTimestamp(){
     const now = new Date();
     const options = { 
@@ -130,13 +103,13 @@ function renderNotes(){
         const pagiDiv = document.createElement("div");
         pagiDiv.className = "provider";
         pagiDiv.innerHTML = `<strong>${name}</strong><br>` +
-            groups.pagi.map(g => `${g}<br>`).join("");
+            groups.pagi.map(g => `🎰 ${g}<br>`).join("");
         notePagi.appendChild(pagiDiv);
 
         const malamDiv = document.createElement("div");
         malamDiv.className = "provider";
         malamDiv.innerHTML = `<strong>${name}</strong><br>` +
-            groups.malam.map(g => `${g}<br>`).join("");
+            groups.malam.map(g => `🎰 ${g}<br>`).join("");
         noteMalam.appendChild(malamDiv);
     }
 }
