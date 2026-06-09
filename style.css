@@ -99,6 +99,21 @@ footer{
     line-height: 1.6;
 }
 
+.copyBtn {
+  background: #444;
+  color: #fff;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+.copyBtn:hover {
+  background: #666;
+  box-shadow: 0 0 8px #0ff;
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px){
     #app{
