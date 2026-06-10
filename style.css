@@ -111,6 +111,7 @@ footer{
 }
 .copyBtn:hover {
   background: #666;
+  color: #fff;
   box-shadow: 0 0 8px #0ff;
 }
 
