@@ -100,7 +100,7 @@ footer{
 }
 
 .copyBtn {
-  background: #444;
+  background: #00FFFF;
   color: #fff;
   border: none;
   padding: 4px 8px;
@@ -113,6 +113,7 @@ footer{
   background: #666;
   box-shadow: 0 0 8px #0ff;
 }
+
 
 /* RESPONSIVE */
 @media (max-width: 768px){
