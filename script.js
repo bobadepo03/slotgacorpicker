@@ -1,5 +1,4 @@
 let providers = {};
-let latestGroups = {};
 
 function shuffle(arr){
     let copy = [...arr];
@@ -8,6 +7,60 @@ function shuffle(arr){
         [copy[i], copy[j]] = [copy[j], copy[i]];
     }
     return copy;
+}
+
+function buildGroups(name, games){
+    const pickCount = getPickCount(name);
+
+    let lockSeparate = null;
+    const pool = [];
+
+    // Pisahkan rule dan game
+    for(const game of games){
+        if(typeof game === "string" && game.startsWith("__LOCKSEPARATE__:")){
+            lockSeparate = game.replace("__LOCKSEPARATE__:", "").split("|");
+        }else{
+            pool.push(game);
+        }
+    }
+
+    // Acak pool
+    const shuffledPool = shuffle(pool);
+
+    let groupA = [];
+    let groupB = [];
+
+    // Paksa game wajib muncul dan dipisah
+    if(lockSeparate && lockSeparate.length === 2){
+        const [g1, g2] = lockSeparate;
+
+        const idx1 = shuffledPool.indexOf(g1);
+        if(idx1 > -1) shuffledPool.splice(idx1, 1);
+
+        const idx2 = shuffledPool.indexOf(g2);
+        if(idx2 > -1) shuffledPool.splice(idx2, 1);
+
+        if(Math.random() < 0.5){
+            groupA.push(g1);
+            groupB.push(g2);
+        }else{
+            groupA.push(g2);
+            groupB.push(g1);
+        }
+    }
+
+    while(groupA.length < pickCount && shuffledPool.length){
+        groupA.push(shuffledPool.shift());
+    }
+
+    while(groupB.length < pickCount && shuffledPool.length){
+        groupB.push(shuffledPool.shift());
+    }
+
+    return {
+        groupA: shuffle(groupA),
+        groupB: shuffle(groupB)
+    };
 }
 
 async function loadData(){
@@ -25,24 +78,22 @@ function getPickCount(name){
 function renderAll(){
     const container = document.getElementById("app");
     container.innerHTML = "";
-    latestGroups = {};
 
     for(const [name, games] of Object.entries(providers)){
-        const shuffled = shuffle(games);
-        let pickCount = getPickCount(name);
+       const { groupA, groupB } = buildGroups(name, games);
 
-        const groupA = shuffled.slice(0, pickCount);
-        const groupB = shuffled.slice(pickCount, pickCount * 2);
-
-        latestGroups[name] = { pagi: groupA, malam: groupB };
+        const cardId = `card-${name}`;
 
         container.innerHTML += `
-          <div class="card fade">
+          <div class="card fade" id="${cardId}">
             <h2>${name}</h2>
+
             <h3>Grup Pagi</h3>
             <ul class="pagi">${groupA.map(g => `<li>${g}</li>`).join("")}</ul>
+
             <h3>Grup Malam</h3>
             <ul class="malam">${groupB.map(g => `<li>${g}</li>`).join("")}</ul>
+
             <button class="refreshBtn">🔄 Refresh</button>
           </div>
         `;
@@ -59,28 +110,35 @@ function renderAll(){
             const card = btn.parentElement;
             const name = card.querySelector("h2").textContent;
             const games = providers[name];
-            const shuffled = shuffle(games);
+            const { groupA, groupB } = buildGroups(name, games);
 
-            let pickCount = getPickCount(name);
-            const groupA = shuffled.slice(0, pickCount);
-            const groupB = shuffled.slice(pickCount, pickCount * 2);
+            const pagiList = card.querySelector(".pagi");
+            const malamList = card.querySelector(".malam");
 
-            latestGroups[name] = { pagi: groupA, malam: groupB };
+            pagiList.classList.add("fade");
+            malamList.classList.add("fade");
 
-            card.querySelector(".pagi").innerHTML = groupA.map(g => `<li>${g}</li>`).join("");
-            card.querySelector(".malam").innerHTML = groupB.map(g => `<li>${g}</li>`).join("");
+            pagiList.innerHTML = groupA.map(g => `<li>${g}</li>`).join("");
+            malamList.innerHTML = groupB.map(g => `<li>${g}</li>`).join("");
 
-            renderNotes();
+            requestAnimationFrame(() => {
+                pagiList.classList.add("show");
+                malamList.classList.add("show");
+            });
+
+            setTimeout(() => {
+                pagiList.classList.remove("fade", "show");
+                malamList.classList.remove("fade", "show");
+            }, 600);
         };
     });
-
-    renderNotes();
 }
 
 document.getElementById("refreshGlobal").onclick = () => {
     renderAll();
 };
 
+// fungsi timestamp
 function updateTimestamp(){
     const now = new Date();
     const options = { 
@@ -92,42 +150,5 @@ function updateTimestamp(){
 }
 setInterval(updateTimestamp, 1000);
 updateTimestamp();
-
-function renderNotes(){
-    const notePagi = document.getElementById("notePagi");
-    const noteMalam = document.getElementById("noteMalam");
-    notePagi.innerHTML = "";
-    noteMalam.innerHTML = "";
-
-    for(const [name, groups] of Object.entries(latestGroups)){
-        const pagiDiv = document.createElement("div");
-        pagiDiv.className = "provider";
-        pagiDiv.innerHTML = `<strong>${name}</strong><br>` +
-            groups.pagi.map(g => `${g}<br>`).join("");
-        notePagi.appendChild(pagiDiv);
-
-        const malamDiv = document.createElement("div");
-        malamDiv.className = "provider";
-        malamDiv.innerHTML = `<strong>${name}</strong><br>` +
-            groups.malam.map(g => `${g}<br>`).join("");
-        noteMalam.appendChild(malamDiv);
-    }
-}
-
-// fungsi copy isi note
-function copyNoteContent(noteId){
-    const container = document.getElementById(noteId);
-    let text = "";
-    container.querySelectorAll(".provider").forEach(div => {
-        text += div.innerText + "\n";
-    });
-    navigator.clipboard.writeText(text.trim()).then(() => {
-        alert("Isi " + (noteId === "notePagi" ? "Grup Pagi" : "Grup Malam") + " berhasil dicopy!");
-    });
-}
-
-// binding tombol copy
-document.getElementById("copyPagi").onclick = () => copyNoteContent("notePagi");
-document.getElementById("copyMalam").onclick = () => copyNoteContent("noteMalam");
 
 loadData();
