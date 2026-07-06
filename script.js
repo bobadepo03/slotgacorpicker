@@ -229,14 +229,14 @@ function renderNotes(){
         notePagi.innerHTML+=`
         <div class="provider">
             <strong>${provider}</strong><br>
-            ${groups.pagi.join("<br>")}
+            ${groups.pagi.map(game => `🎰 ${game}`).join("<br>")}
         </div>
         `;
 
         noteMalam.innerHTML+=`
         <div class="provider">
             <strong>${provider}</strong><br>
-            ${groups.malam.join("<br>")}
+            ${groups.pagi.map(game => `🎰 ${game}`).join("<br>")}
         </div>
         `;
 
