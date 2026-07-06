@@ -216,6 +216,8 @@ updateTimestamp();
 
 function renderNotes(){
 
+    console.log(latestGroups);
+    
     const notePagi=document.getElementById("notePagi");
     const noteMalam=document.getElementById("noteMalam");
 
