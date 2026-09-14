@@ -139,3 +139,45 @@ footer{
 .fade.show {
     opacity: 1;
 }
+
+/* =========================================================
+   GAME TIME
+========================================================= */
+
+.game-time {
+    display: inline-block;
+    margin-left: 4px;
+    white-space: nowrap;
+    font-weight: normal;
+}
+
+
+/* =========================================================
+   GAME LIST
+========================================================= */
+
+.card ul {
+    padding-left: 20px;
+}
+
+.card li {
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px){
+
+    .game-time {
+        white-space: normal;
+    }
+
+    .card li {
+        line-height: 1.6;
+    }
+
+}
