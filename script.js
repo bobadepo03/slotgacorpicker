@@ -199,6 +199,7 @@ function buildGroups(name, games) {
 
     }
 
+
     while (groupB.length < pickCount && pool.length) {
 
         groupB.push(pool.shift());
@@ -628,6 +629,7 @@ function renderNotes() {
     notePagi.innerHTML = "";
     noteMalam.innerHTML = "";
 
+
     /* =====================================================
        HEADER NOTE PAGI
     ===================================================== */
@@ -642,6 +644,7 @@ function renderNotes() {
         <br>
     `;
 
+
     /* =====================================================
        HEADER NOTE MALAM
     ===================================================== */
@@ -655,6 +658,7 @@ function renderNotes() {
         </div>
         <br>
     `;
+
 
     /* =====================================================
        ISI PROVIDER
@@ -680,6 +684,7 @@ function renderNotes() {
                 </div>
             `;
 
+
             noteMalam.innerHTML += `
                 <div class="provider">
                     <strong>${provider}</strong><br>
@@ -699,6 +704,7 @@ function renderNotes() {
 
         });
 
+
     /* =====================================================
        FOOTER NOTE PAGI
     ===================================================== */
@@ -713,6 +719,7 @@ function renderNotes() {
         </div>
     `;
 
+
     /* =====================================================
        FOOTER NOTE MALAM
     ===================================================== */
@@ -726,10 +733,205 @@ function renderNotes() {
             🏆 TERIMA KASIH! SEMOGA HOKI YA kakakku 🏆
         </div>
     `;
+
 }
 
+
 /* =========================================================
-   TOMBOL COPY
+   BUILD TEXT UNTUK COPY
+========================================================= */
+
+function buildCopyText(target) {
+
+    const isPagi = target === "notePagi";
+
+    const date = isPagi
+        ? getDateString(0)
+        : getDateString(1);
+
+    let text = "";
+
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    text += "🔥SLOT GACOR HARI INI🔥\n";
+    text += `💯TANGGAL ( ${date} ) iya kakaku💯\n`;
+    text += "🏆BOBATOTO🏆\n";
+    text += "🎰Selamat Kepada Pemenang Salam JP🎰\n\n";
+
+
+    /* =====================================================
+       PROVIDER + GAME + JAM
+    ===================================================== */
+
+    Object.entries(latestGroups)
+        .forEach(([provider, groups]) => {
+
+            const games = isPagi
+                ? groups.pagi
+                : groups.malam;
+
+            const times = isPagi
+                ? groups.pagiTimes
+                : groups.malamTimes;
+
+
+            text += `${provider}\n`;
+
+
+            games.forEach((game, index) => {
+
+                const time =
+                    times[index] || "";
+
+                text +=
+                    `🎰 ${game} ${time}\n`;
+
+            });
+
+
+            text += "\n";
+
+        });
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    text += "💥Salam  jp iya kakak💥\n";
+    text += "🔥GAS Kakaku 🔥\n";
+    text += "💥DITUNGGU WD NYA KAKAKKU💥\n";
+    text += "🏆 TERIMA KASIH! SEMOGA HOKI YA kakakku 🏆";
+
+
+    return text.trim();
+
+}
+
+
+/* =========================================================
+   NOTIFIKASI COPY - OTOMATIS HILANG
+========================================================= */
+
+function showCopyToast(message) {
+
+    let toast =
+        document.getElementById("copyToast");
+
+
+    if (!toast) {
+
+        toast =
+            document.createElement("div");
+
+        toast.id = "copyToast";
+
+        toast.style.position = "fixed";
+        toast.style.left = "50%";
+        toast.style.bottom = "30px";
+        toast.style.transform = "translateX(-50%)";
+
+        toast.style.background = "#222222";
+        toast.style.color = "#fff";
+
+        toast.style.padding = "12px 20px";
+
+        toast.style.borderRadius = "10px";
+
+        toast.style.fontSize = "14px";
+        toast.style.fontWeight = "bold";
+
+        toast.style.zIndex = "99999";
+
+        toast.style.boxShadow =
+            "0 4px 15px rgba(0,0,0,0.4)";
+
+        toast.style.opacity = "0";
+
+        toast.style.transition =
+            "opacity 0.25s ease";
+
+        document.body.appendChild(toast);
+
+    }
+
+
+    toast.textContent = message;
+
+    toast.style.opacity = "1";
+
+
+    clearTimeout(toast.hideTimer);
+
+
+    toast.hideTimer =
+        setTimeout(() => {
+
+            toast.style.opacity = "0";
+
+        }, 1500);
+
+}
+
+
+/* =========================================================
+   COPY NOTE
+========================================================= */
+
+function copyNoteContent(target) {
+
+    const text =
+        buildCopyText(target);
+
+
+    if (
+        !navigator.clipboard ||
+        !navigator.clipboard.writeText
+    ) {
+
+        showCopyToast(
+            "Fitur copy tidak tersedia di browser ini."
+        );
+
+        return;
+
+    }
+
+
+    navigator.clipboard
+        .writeText(text)
+        .then(() => {
+
+            showCopyToast(
+
+                target === "notePagi"
+                    ? "Grup Pagi berhasil dicopy"
+                    : "Grup Malam berhasil dicopy"
+
+            );
+
+        })
+        .catch(error => {
+
+            console.error(
+                "Gagal copy:",
+                error
+            );
+
+            showCopyToast(
+                "Gagal menyalin. Silakan coba lagi."
+            );
+
+        });
+
+}
+
+
+/* =========================================================
+   TOMBOL COPY PAGI
 ========================================================= */
 
 const copyPagi =
@@ -745,6 +947,10 @@ if (copyPagi) {
 
 }
 
+
+/* =========================================================
+   TOMBOL COPY MALAM
+========================================================= */
 
 const copyMalam =
     document.getElementById("copyMalam");
